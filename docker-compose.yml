@@ -1,0 +1,62 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: qalam-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: qalam
+      POSTGRES_PASSWORD: qalam
+      POSTGRES_DB: qalam
+    ports:
+      - "5432:5432"
+    volumes:
+      - qalam_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U qalam -d qalam"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: qalam-api
+    restart: unless-stopped
+    environment:
+      PORT: 2745
+      DATABASE_URL: postgres://qalam:qalam@postgres:5432/qalam
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "2745:2745"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:2745/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""
+        ]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+      start_period: 15s
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:2745
+    container_name: qalam-web
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://localhost:2745
+      SERVER_API_URL: http://api:2745
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+volumes:
+  qalam_pgdata:

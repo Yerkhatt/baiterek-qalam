@@ -1,0 +1,25 @@
+{
+  "name": "@qalam/web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "capture-design-previews": "node scripts/prepare-standalone-static.cjs && node scripts/capture-admin-designs.cjs",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@qalam/form-engine": "file:../../packages/form-engine",
+    "@xyflow/react": "^12.10.2",
+    "next": "^14.2.5",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
+    "vitest": "^4.1.5"
+  }
+}

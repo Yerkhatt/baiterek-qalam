@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@qalam/form-engine": ["../../packages/form-engine/dist"]
+    }
+  },
+  "include": ["src/**/*"]
+}

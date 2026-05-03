@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "@qalam/form-engine": ["../../packages/form-engine/src/index.ts"]
+    }
+  },
+  "include": ["src/**/*"],
+  "ts-node": {
+    "preferTsExts": true
+  }
+}
